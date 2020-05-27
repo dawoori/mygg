@@ -4,8 +4,16 @@ import com.mygg.mygg.summoner.Summoner;
 import com.mygg.mygg.summoner.SummonerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class SomeController {
@@ -30,11 +38,20 @@ public class SomeController {
         return appName;
     }
 
-    @PostMapping("/ralo")
+    @GetMapping("/ralo")
     public String saveSummoner(RestTemplate restTemplate) {
-        String name = "랄투브";
-        Summoner summoner = restTemplate.getForObject("https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + name + "?api_key=" + apiKey, Summoner.class);
-        summonerRepository.save(summoner);
+        String url = "http://ddragon.leagueoflegends.com/cdn/10.10.4/data/ko_KR/champion.json";
+//        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+        HttpHeaders headers = new HttpHeaders();
+
+        HttpEntity entity = new HttpEntity(headers);
+
+        Map<String, String> params = new HashMap<String, String>();
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, String.class, params);
+        String versions = responseEntity.getBody();
+        System.out.println(versions);
+
         return "saved";
     }
 }
