@@ -16,7 +16,7 @@ public class Entry {
     @Id
     private String leagueId;
 
-    @Id
+//    @Id
     private String queueType;
 
     private String tier;
