@@ -1,0 +1,9 @@
+POST http://localhost:8080/ralo
+
+###
+POST http://localhost:8080/summoner/랄투브2
+
+###
+GET http://localhost:8080/all
+
+###
