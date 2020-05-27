@@ -33,6 +33,7 @@ public class SummonerController {
         }
     }
 
+    //TODO: 예외시 404 NOT FOUND 보내기
     @PostMapping("/summoner/{name}")
     public Summoner getAndPostSummoner(@PathVariable String name) {
         String url = baseUrl + "summoner/v4/summoners/by-name/" + name + "?api_key=" + apiKey;
