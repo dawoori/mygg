@@ -1,11 +1,10 @@
 package com.mygg.mygg.entry;
 
+import com.mygg.mygg.summoner.Summoner;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 
 @Setter
 @Getter
@@ -16,7 +15,6 @@ public class Entry {
     @Id
     private String leagueId;
 
-//    @Id
     private String queueType;
 
     private String tier;

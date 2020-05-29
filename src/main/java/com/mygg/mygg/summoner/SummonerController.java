@@ -20,11 +20,11 @@ public class SummonerController {
 
     private RestTemplate restTemplate = new RestTemplate();
 
-    private final String baseUrl = "https://kr.api.riotgames.com/lol/";
+    private final String baseUrl = "https://kr.api.riotgames.com";
 
     @GetMapping("/summoner/{name}")
     public Summoner getSummoner(@PathVariable String name) {
-        String url = baseUrl + "summoner/v4/summoners/by-name/" + name;
+        String url = baseUrl + "/lol/summoner/v4/summoners/by-name/" + name;
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-Riot-Token", apiKey);
@@ -42,7 +42,7 @@ public class SummonerController {
     //TODO: 예외시 404 NOT FOUND 보내기
     @PostMapping("/summoner/{name}")
     public Summoner getAndPostSummoner(@PathVariable String name) {
-        String url = baseUrl + "summoner/v4/summoners/by-name/" + name;
+        String url = baseUrl + "/lol/summoner/v4/summoners/by-name/" + name;
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-Riot-Token", apiKey);
@@ -55,8 +55,7 @@ public class SummonerController {
             assert summoner != null;
             boolean isExist = summonerRepository.existsById(summoner.getId());
 
-            if (!isExist) summonerRepository.save(summoner);
-
+            summonerRepository.save(summoner);
             return summoner;
         } catch (final HttpClientErrorException e) {
             return summonerRepository.findByName("랄투브");
