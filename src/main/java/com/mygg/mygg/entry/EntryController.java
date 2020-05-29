@@ -68,7 +68,7 @@ public class EntryController {
         }
         String tier = entries[0].getTier().substring(0,1) + entries[0].getTier().substring(1).toLowerCase();
 
-        String emblem = "<img src=\"/datacdn/Emblem_" + tier + ".png\">";
+        String emblem = "<img src=\"/datacdn/rank/emblems/Emblem_" + tier + ".png\">";
 
         return emblem;
     }
