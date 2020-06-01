@@ -22,7 +22,7 @@ public class EntryController {
     private final String baseUrl = "https://kr.api.riotgames.com";
 
     @GetMapping("/entry/{summonerId}")
-    public Entry getEntry(@PathVariable String summonerId) {
+    public Entry[] getEntry(@PathVariable String summonerId) {
         String url = baseUrl + "/lol/league/v4/entries/by-summoner/" + summonerId;
 
         HttpHeaders headers = new HttpHeaders();
@@ -33,9 +33,10 @@ public class EntryController {
             ResponseEntity<Entry[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, Entry[].class);
             Entry[] entries = responseEntity.getBody();
 
-            return entries[0];
+            return entries;
         } catch (final HttpClientErrorException e) {
-            return new Entry();
+
+            return new Entry[]{new Entry()};
         }
     }
 
