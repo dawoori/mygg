@@ -14,4 +14,21 @@ import javax.persistence.Id;
 public class Spectator {
     @Id
     private long gameId;
+
+    private long mapId;
+
+    private String gameMode;
+
+    private String gameType;
+
+    private long gameQueueConfigId;
+
+
+
+    private String platformId;
+
+    private long gameStartTime;
+
+    private long gameLength;
+
 }

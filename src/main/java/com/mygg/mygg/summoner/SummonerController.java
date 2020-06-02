@@ -66,7 +66,7 @@ public class SummonerController {
     }
 
     @GetMapping("/summoner/code/{name}")
-    public String getStatusCode(@PathVariable String name) {
+    public Object getStatusCode(@PathVariable String name) {
         Summoner s = summonerRepository.findByName(name);
 
         String url = baseUrl + "/lol/summoner/v4/summoners/by-name/" + name;
@@ -76,11 +76,9 @@ public class SummonerController {
         HttpEntity<String> entity = new HttpEntity<>(headers);
         try {
             ResponseEntity<Summoner> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, Summoner.class);
-            return responseEntity.getStatusCode().toString();
+            return responseEntity.getBody();
         } catch (final HttpClientErrorException e) {
-
-            return e.getStatusCode().toString();
+            return e.getStatusCode();
         }
     }
-
 }

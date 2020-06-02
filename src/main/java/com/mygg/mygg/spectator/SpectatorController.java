@@ -27,7 +27,7 @@ public class SpectatorController {
     private final String baseUrl = "https://kr.api.riotgames.com";
 
     @GetMapping("/spectator/{name}")
-    public String getSpectator(@PathVariable String name) {
+    public Object getSpectator(@PathVariable String name) {
         Summoner s = summonerRepository.findByName(name);
 
         if(s == null) {
@@ -36,7 +36,7 @@ public class SpectatorController {
 
         String id = s.getId();
 
-        String url = baseUrl + "/lol/summoner/v4/summoners/by-name/" + id;
+        String url = baseUrl + "/lol/spectator/v4/active-games/by-summoner/" + id;
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-Riot-Token", apiKey);
@@ -45,7 +45,7 @@ public class SpectatorController {
         try {
             ResponseEntity<Spectator> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, Spectator.class);
 
-            return responseEntity.getStatusCode().toString();
+            return responseEntity.getBody();
         } catch (final HttpClientErrorException e) {
             return e.getStatusCode().toString();
         }
