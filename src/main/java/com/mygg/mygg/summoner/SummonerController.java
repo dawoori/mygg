@@ -2,10 +2,7 @@ package com.mygg.mygg.summoner;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -24,6 +21,12 @@ public class SummonerController {
 
     @GetMapping("/summoner/{name}")
     public Summoner getSummoner(@PathVariable String name) {
+        Summoner s = summonerRepository.findByName(name);
+
+        if(s != null) {
+            return s;
+        }
+
         String url = baseUrl + "/lol/summoner/v4/summoners/by-name/" + name;
 
         HttpHeaders headers = new HttpHeaders();
@@ -60,6 +63,24 @@ public class SummonerController {
         } catch (final HttpClientErrorException e) {
             return summonerRepository.findByName("랄투브");
         }
-
     }
+
+    @GetMapping("/summoner/code/{name}")
+    public String getStatusCode(@PathVariable String name) {
+        Summoner s = summonerRepository.findByName(name);
+
+        String url = baseUrl + "/lol/summoner/v4/summoners/by-name/" + name;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Riot-Token", apiKey);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        try {
+            ResponseEntity<Summoner> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, Summoner.class);
+            return responseEntity.getStatusCode().toString();
+        } catch (final HttpClientErrorException e) {
+
+            return e.getStatusCode().toString();
+        }
+    }
+
 }

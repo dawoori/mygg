@@ -1,6 +1,7 @@
 package com.mygg.mygg.entry;
 
 import com.mygg.mygg.summoner.Summoner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -16,6 +18,9 @@ import org.springframework.web.client.RestTemplate;
 public class EntryController {
     @Value(value = "${mygg.api-key}")
     protected String apiKey;
+
+    @Autowired
+    private EntryRepository entryRepository;
 
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -32,6 +37,30 @@ public class EntryController {
         try {
             ResponseEntity<Entry[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, Entry[].class);
             Entry[] entries = responseEntity.getBody();
+
+            return entries;
+        } catch (final HttpClientErrorException e) {
+
+            return new Entry[]{new Entry()};
+        }
+    }
+
+    @PostMapping("/entry/{summonerId}")
+    public Entry[] postEntry(@PathVariable String summonerId) {
+        String url = baseUrl + "/lol/league/v4/entries/by-summoner/" + summonerId;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Riot-Token", apiKey);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<Entry[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, Entry[].class);
+            Entry[] entries = responseEntity.getBody();
+
+            assert entries != null;
+            for(Entry entry: entries) {
+                entryRepository.save(entry);
+            }
 
             return entries;
         } catch (final HttpClientErrorException e) {
